@@ -1,14 +1,14 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
+import { AppController } from '@modules/app/app.controller';
+import { AppService } from '@modules/app/app.service';
 import { ConfigModule } from '@nestjs/config';
-import { TelegramModule } from './telegram/telegram.module';
-import configuration from './config/configuration';
+import { TelegramModule } from '@modules/telegram/telegram.module';
+import config from '@config';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
-      load: [configuration],
+      load: [config],
       isGlobal: true,
     }),
     TelegramModule,
