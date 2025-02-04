@@ -1,7 +1,9 @@
 import { Module } from '@nestjs/common';
 import { TelegrafModule } from 'nestjs-telegraf';
-import { TelegramService } from '@modules/telegram/telegram.service';
+import { TelegramController } from '@modules/telegram/telegram.controller';
 import { ConfigService } from '@nestjs/config';
+import { RegisterWizard } from '@modules/telegram/wizards/register.wizard';
+import { session } from 'telegraf';
 
 @Module({
   imports: [
@@ -17,11 +19,12 @@ import { ConfigService } from '@nestjs/config';
         }
 
         return {
+          middlewares: [session()],
           token,
         };
       },
     }),
   ],
-  providers: [TelegramService],
+  providers: [TelegramController, RegisterWizard],
 })
 export class TelegramModule {}
