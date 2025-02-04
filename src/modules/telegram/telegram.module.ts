@@ -1,8 +1,8 @@
-import { Module } from '@nestjs/common';
-import { TelegrafModule } from 'nestjs-telegraf';
 import { TelegramController } from '@modules/telegram/telegram.controller';
-import { ConfigService } from '@nestjs/config';
 import { RegisterWizard } from '@modules/telegram/wizards/register.wizard';
+import { Module } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
+import { TelegrafModule } from 'nestjs-telegraf';
 import { session } from 'telegraf';
 
 @Module({

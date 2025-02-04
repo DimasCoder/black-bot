@@ -1,3 +1,6 @@
+import { COMMANDS } from '@modules/telegram/telegram.commands';
+import { MARKUPS } from '@modules/telegram/telegram.markups';
+import { BOT_MESSAGES } from '@modules/telegram/telegram.messages';
 import {
   Action,
   Command,
@@ -8,10 +11,7 @@ import {
   Update,
 } from 'nestjs-telegraf';
 import { Context, Markup, Telegraf } from 'telegraf';
-import { COMMANDS } from '@modules/telegram/telegram.commands';
-import { BOT_MESSAGES } from '@modules/telegram/telegram.messages';
 import { SceneContext } from 'telegraf/scenes';
-import { MARKUPS } from '@modules/telegram/telegram.markups';
 
 @Update()
 export class TelegramController {

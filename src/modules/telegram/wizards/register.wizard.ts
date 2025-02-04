@@ -1,8 +1,8 @@
+import { WizardContext } from '@modules/telegram/telegram.interface';
+import { BOT_MESSAGES } from '@modules/telegram/telegram.messages';
+import { TelegramUtils } from '@modules/telegram/telegram.utils';
 import { Injectable } from '@nestjs/common';
 import { Ctx, Wizard, WizardStep } from 'nestjs-telegraf';
-import { WizardContext } from '@modules/telegram/telegram.interface';
-import { TelegramUtils } from '@modules/telegram/telegram.utils';
-import { BOT_MESSAGES } from '@modules/telegram/telegram.messages';
 
 @Wizard('register')
 @Injectable()

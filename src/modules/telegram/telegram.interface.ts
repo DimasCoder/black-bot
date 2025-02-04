@@ -2,7 +2,7 @@ import { Scenes } from 'telegraf';
 import { WizardContext as BaseWizardContext } from 'telegraf/scenes';
 import { Update } from 'telegraf/typings/core/types/typegram';
 
-export interface WizardContext<T extends object = {}>
+export interface WizardContext<T extends object = object>
   extends BaseWizardContext {
   update: Update.CallbackQueryUpdate;
   session: Scenes.SceneSession<SceneSession<T>>;
