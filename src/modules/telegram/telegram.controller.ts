@@ -1,13 +1,34 @@
-import { Injectable } from '@nestjs/common';
-import { Command, Ctx, On, Update } from 'nestjs-telegraf';
-import { Context } from 'telegraf';
+import {
+  Action,
+  Command,
+  Ctx,
+  InjectBot,
+  On,
+  Start,
+  Update,
+} from 'nestjs-telegraf';
+import { Context, Markup, Telegraf } from 'telegraf';
+import { COMMANDS } from '@modules/telegram/telegram.commands';
+import { BOT_MESSAGES } from '@modules/telegram/telegram.messages';
+import { SceneContext } from 'telegraf/scenes';
+import { MARKUPS } from '@modules/telegram/telegram.markups';
 
 @Update()
-@Injectable()
-export class TelegramService {
-  @Command('start')
+export class TelegramController {
+  constructor(@InjectBot() private readonly bot: Telegraf<Context>) {
+    this.bot.telegram.setMyCommands(COMMANDS);
+  }
+
+  @Start()
   async onStartCommand(@Ctx() ctx: Context) {
-    await ctx.reply('Привіт, мене звати Black Bot.');
+    const menuMarkup = Markup.inlineKeyboard(
+      MARKUPS.START_MENU.map((markup) =>
+        Markup[markup.type].callback(markup.name, markup.action),
+      ),
+      { columns: 1 },
+    );
+
+    await ctx.reply(BOT_MESSAGES.NEW_USER_GREETING, menuMarkup);
   }
 
   @Command('random')
@@ -24,6 +45,15 @@ export class TelegramService {
         '/random - Отримати випадкове число від 1 до 100\n' +
         '/help - Список доступних команд',
     );
+  }
+
+  @Command('register')
+  @Action('register')
+  async startForm(
+    @Ctx()
+    ctx: SceneContext<Context>,
+  ) {
+    await ctx.scene.enter('register');
   }
 
   @On('text')
