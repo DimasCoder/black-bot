@@ -1,6 +1,7 @@
 import { WizardContext } from '@modules/telegram/telegram.interface';
 import { BOT_MESSAGES } from '@modules/telegram/telegram.messages';
 import { TelegramUtils } from '@modules/telegram/telegram.utils';
+import { UserService } from '@modules/user/user.service';
 import { Injectable, Logger } from '@nestjs/common';
 import { Ctx, Wizard, WizardStep } from 'nestjs-telegraf';
 
@@ -10,7 +11,7 @@ export class RegisterWizard {
   private readonly telegramUtils: TelegramUtils;
   private readonly logger: Logger;
 
-  constructor() {
+  constructor(private readonly userService: UserService) {
     this.telegramUtils = new TelegramUtils();
     this.logger = new Logger('RegisterWizard', { timestamp: true });
   }
