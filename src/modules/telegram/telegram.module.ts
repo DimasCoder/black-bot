@@ -1,5 +1,6 @@
 import { TelegramController } from '@modules/telegram/telegram.controller';
-import { RegisterWizard } from '@modules/telegram/wizards/register.wizard';
+import { TelegramUtils } from '@modules/telegram/telegram.utils';
+import { GreetingWizard } from '@modules/telegram/wizards/greeting.wizard';
 import { UserModule } from '@modules/user/user.module';
 import { Module } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
@@ -27,6 +28,6 @@ import { session } from 'telegraf';
     }),
     UserModule,
   ],
-  providers: [TelegramController, RegisterWizard],
+  providers: [TelegramController, GreetingWizard, TelegramUtils],
 })
 export class TelegramModule {}
