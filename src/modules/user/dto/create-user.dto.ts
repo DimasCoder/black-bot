@@ -23,6 +23,11 @@ export class CreateUserDto {
   @MaxLength(32)
   username?: string;
 
+  @IsOptional()
+  @IsString()
+  @MaxLength(32)
+  preferredName?: string;
+
   @IsNotEmpty()
   @IsNumber()
   chatId: ID;

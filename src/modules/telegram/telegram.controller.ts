@@ -1,34 +1,46 @@
 import { COMMANDS } from '@modules/telegram/telegram.commands';
-import { MARKUPS } from '@modules/telegram/telegram.markups';
 import { BOT_MESSAGES } from '@modules/telegram/telegram.messages';
-import {
-  Action,
-  Command,
-  Ctx,
-  InjectBot,
-  On,
-  Start,
-  Update,
-} from 'nestjs-telegraf';
-import { Context, Markup, Telegraf } from 'telegraf';
+import { TelegramUtils } from '@modules/telegram/telegram.utils';
+import { UserService } from '@modules/user/user.service';
+import { Logger } from '@nestjs/common';
+import { Command, Ctx, InjectBot, On, Start, Update } from 'nestjs-telegraf';
+import { Context, Telegraf } from 'telegraf';
 import { SceneContext } from 'telegraf/scenes';
 
 @Update()
 export class TelegramController {
-  constructor(@InjectBot() private readonly bot: Telegraf<Context>) {
+  private readonly logger: Logger;
+
+  constructor(
+    @InjectBot() private readonly bot: Telegraf<Context>,
+    private readonly userService: UserService,
+    private readonly tgUtils: TelegramUtils,
+  ) {
     this.bot.telegram.setMyCommands(COMMANDS);
+    this.logger = new Logger('TelegramController');
   }
 
   @Start()
-  async onStartCommand(@Ctx() ctx: Context) {
-    const menuMarkup = Markup.inlineKeyboard(
-      MARKUPS.START_MENU.map((markup) =>
-        Markup[markup.type].callback(markup.name, markup.action),
-      ),
-      { columns: 1 },
-    );
+  async onStartCommand(@Ctx() ctx: SceneContext<Context>) {
+    const telegramUser = ctx.from;
 
-    await ctx.reply(BOT_MESSAGES.NEW_USER_GREETING, menuMarkup);
+    if (!telegramUser) {
+      await ctx.reply(BOT_MESSAGES.ERRORS.GENERAL);
+      return;
+    }
+
+    const existingUser = await this.userService.findOne(telegramUser.id);
+
+    if (!existingUser) {
+      await ctx.scene.enter('greeting');
+      return;
+    }
+
+    await ctx.reply(
+      BOT_MESSAGES.GREETING.EXISTING_USER_GREETING(
+        this.tgUtils.getUserDisplayName(existingUser),
+      ),
+    );
   }
 
   @Command('random')
@@ -47,15 +59,6 @@ export class TelegramController {
     );
   }
 
-  @Command('register')
-  @Action('register')
-  async startForm(
-    @Ctx()
-    ctx: SceneContext<Context>,
-  ) {
-    await ctx.scene.enter('register');
-  }
-
   @On('text')
   async onMessage(@Ctx() ctx: Context) {
     const message = ctx.text;
@@ -71,7 +74,7 @@ export class TelegramController {
       return;
     }
 
-    console.log(`Received message: ${message}`);
+    this.logger.log(`Received message: ${message}`);
 
     await ctx.reply('Привіт!');
   }

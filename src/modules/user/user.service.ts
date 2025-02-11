@@ -20,7 +20,7 @@ export class UserService
   }
 
   async findOne(id: ID): Promise<Nullable<User>> {
-    return this.userRepository.findOneBy({ id });
+    return this.userRepository.findOneBy({ chatId: id });
   }
 
   async create(createUserDto: CreateUserDto): Promise<User> {

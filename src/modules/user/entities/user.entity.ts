@@ -10,9 +10,12 @@ export class User extends BaseEntity {
   @Column({ nullable: true, length: 64 })
   lastName: string;
 
-  @Column({ nullable: true, length: 32 })
+  @Column({ nullable: true, length: 32, unique: true })
   username: string;
 
-  @Column()
+  @Column({ nullable: true, length: 64 })
+  preferredName: string;
+
+  @Column({ unique: true })
   chatId: ID;
 }
